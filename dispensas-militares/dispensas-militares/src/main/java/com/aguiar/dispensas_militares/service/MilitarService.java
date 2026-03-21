@@ -34,4 +34,8 @@ public class MilitarService {
     public void deletar(Long id) {
         militarRepository.deleteById(id);
     }
+    public Militar buscarPorId(Long id) {
+        return militarRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Militar não encontrado!"));
+    }
 }

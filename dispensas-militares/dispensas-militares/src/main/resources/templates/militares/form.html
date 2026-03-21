@@ -13,7 +13,14 @@
 
     <div class="mb-3">
         <label class="form-label">NIP</label>
-        <input type="text" class="form-control" th:field="*{nip}" required />
+        <input type="text"
+               class="form-control"
+               th:field="*{nip}"
+               id="nip"
+               placeholder="XX.XXXX.XX"
+               maxlength="10"
+               required />
+        <div class="form-text text-muted">Formato: XX.XXXX.XX (ex: 21.1207.49)</div>
     </div>
 
     <div class="mb-3">
@@ -23,18 +30,37 @@
 
     <div class="mb-3">
         <label class="form-label">Posto</label>
-        <input type="text" class="form-control" th:field="*{posto}" required />
+        <select class="form-select" th:field="*{posto}" required>
+            <option value="">Selecione...</option>
+            <option th:each="posto : ${T(com.aguiar.dispensas_militares.model.Posto).values()}"
+                    th:value="${posto}"
+                    th:text="${posto.descricao}">
+            </option>
+        </select>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Seção</label>
-        <input type="text" class="form-control" th:field="*{secao}" required />
+        <label class="form-label">Companhia</label>
+        <select class="form-select" th:field="*{companhia}" required>
+            <option value="">Selecione...</option>
+            <option th:each="cia : ${T(com.aguiar.dispensas_militares.model.Companhia).values()}"
+                    th:value="${cia}"
+                    th:text="${cia.descricao}">
+            </option>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-success">Salvar</button>
     <a th:href="@{/militares}" class="btn btn-secondary">Cancelar</a>
 
 </form>
-
+<script>
+    document.getElementById('nip').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.slice(0,2) + '.' + value.slice(2);
+        if (value.length > 7) value = value.slice(0,7) + '.' + value.slice(7);
+        e.target.value = value;
+    });
+</script>
 </body>
 </html>

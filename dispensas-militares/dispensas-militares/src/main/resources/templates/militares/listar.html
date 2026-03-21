@@ -23,7 +23,7 @@
         <th>NIP</th>
         <th>Nome</th>
         <th>Posto</th>
-        <th>Seção</th>
+        <th>Companhia</th>
         <th>Data Inclusão</th>
         <th>Ações</th>
     </tr>
@@ -32,13 +32,15 @@
     <tr th:each="militar : ${militares}">
         <td th:text="${militar.nip}"></td>
         <td th:text="${militar.nome}"></td>
-        <td th:text="${militar.posto}"></td>
-        <td th:text="${militar.secao}"></td>
+        <td th:text="${militar.posto.descricao}"></td>
+        <td th:text="${militar.companhia.descricao}"></td>
         <td th:text="${militar.dataInclusao}"></td>
         <td>
             <a th:href="@{/militares/deletar/{id}(id=${militar.id})}"
                class="btn btn-danger btn-sm"
                onclick="return confirm('Deseja deletar esse militar?')">Deletar</a>
+            <a th:href="@{/dispensas/militar/{id}(id=${militar.id})}"
+               class="btn btn-primary btn-sm">Ver Dispensas</a>
         </td>
     </tr>
     </tbody>

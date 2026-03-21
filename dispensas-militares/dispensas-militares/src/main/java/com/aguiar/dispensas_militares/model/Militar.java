@@ -23,6 +23,9 @@ public class Militar {
     private String posto;
 
     @Column(nullable = false)
+    private String secao;
+
+    @Column(nullable = false)
     private LocalDate dataInclusao;
 
 }

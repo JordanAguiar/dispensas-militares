@@ -17,8 +17,8 @@ public class MilitarService {
         return militarRepository.findAll();
     }
 
-    public Militar buscarPorNip(String nip){
-        return militarRepository.findByNip(nip);
+    public List<Militar> buscarPorNipContaining(String nip) {
+        return militarRepository.findByNipContainingIgnoreCase(nip);
     }
     public List<Militar> buscarPorNome(String nome) {
         return militarRepository.findByNomeContainingIgnoreCase(nome);

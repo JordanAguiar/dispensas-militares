@@ -18,7 +18,7 @@ public class MilitarController {
     @GetMapping
     public String listar(@RequestParam(required = false) String busca, Model model) {
         if (busca != null && !busca.isEmpty()) {
-            model.addAttribute("militares", militarService.buscarPorNome(busca));
+            model.addAttribute("militares", militarService.buscarPorNipContaining(busca));
         } else {
             model.addAttribute("militares", militarService.listarTodos());
         }

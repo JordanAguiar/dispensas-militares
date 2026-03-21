@@ -12,4 +12,6 @@ public interface MilitarRepository extends JpaRepository<Militar, Long> {
     List<Militar> findByNomeContainingIgnoreCase(String nome);
 
     Militar findByNip(String nip);
+
+    List<Militar> findByNipContainingIgnoreCase(String nip);
 }

@@ -29,15 +29,19 @@
         <div class="card-body">
             <form th:action="@{/usuarios/salvar}" th:object="${usuario}" method="post">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label class="form-label">Username</label>
                         <input type="text" class="form-control" th:field="*{username}" required />
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" required />
+                    </div>
+                    <div class="col-md-3 mb-3">
                         <label class="form-label">Senha</label>
                         <input type="password" class="form-control" th:field="*{password}" required />
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <label class="form-label">Perfil</label>
                         <select class="form-select" th:field="*{perfil}" required>
                             <option value="">Selecione...</option>
@@ -57,6 +61,7 @@
         <thead class="table-dark">
         <tr>
             <th>Username</th>
+            <th>Email</th>
             <th>Perfil</th>
             <th>Ações</th>
         </tr>
@@ -64,6 +69,7 @@
         <tbody>
         <tr th:each="u : ${usuarios}">
             <td th:text="${u.username}"></td>
+            <td th:text="${u.email}"></td>
             <td>
                     <span class="badge"
                           th:classappend="${u.perfil.name() == 'MODERADOR'} ? 'bg-danger' :

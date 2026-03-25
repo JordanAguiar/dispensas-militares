@@ -29,7 +29,29 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+
+                        // Apenas MODERADOR pode gerenciar usuários
+                        .requestMatchers("/usuarios/**").hasAuthority("ROLE_MODERADOR")
+
+                        // CONSULTOR só acessa GET (visualizar)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/militares", "/militares/", "/dispensas/**").hasAnyAuthority(
+                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO"
+                        )
+
+                        // AFILHADO pode criar e alterar mas não deletar
+                        .requestMatchers("/militares/novo", "/militares/salvar", "/dispensas/salvar/**").hasAnyAuthority(
+                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_AFILHADO"
+                        )
+
+                        // Apenas MODERADOR e ADMINISTRADOR podem deletar
+                        .requestMatchers("/militares/deletar/**", "/dispensas/deletar/**").hasAnyAuthority(
+                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR"
+                        )
+
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/acesso-negado")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

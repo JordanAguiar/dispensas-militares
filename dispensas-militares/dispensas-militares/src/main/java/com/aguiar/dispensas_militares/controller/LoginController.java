@@ -20,4 +20,8 @@ public class LoginController {
         }
         return "login";
     }
+    @GetMapping("/acesso-negado")
+    public String acessoNegado() {
+        return "acesso-negado";
+    }
 }

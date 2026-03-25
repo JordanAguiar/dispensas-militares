@@ -1,5 +1,6 @@
 package com.aguiar.dispensas_militares.controller;
 
+import org.springframework.security.core.Authentication;
 import com.aguiar.dispensas_militares.model.Perfil;
 import com.aguiar.dispensas_militares.model.Usuario;
 import com.aguiar.dispensas_militares.service.UsuarioService;
@@ -30,8 +31,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/deletar/{id}")
-    public String deletar(@PathVariable Long id) {
-        usuarioService.deletar(id);
-        return "redirect:/usuarios";
+    public String deletar(@PathVariable Long id, Authentication authentication, Model model) {
+        try {
+            usuarioService.deletar(id, authentication.getName());
+            return "redirect:/usuarios";
+        } catch (RuntimeException e) {
+            return "redirect:/acesso-negado";
+        }
     }
 }

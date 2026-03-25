@@ -30,8 +30,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
 
-                        // Apenas MODERADOR pode gerenciar usuários
-                        .requestMatchers("/usuarios/**").hasAuthority("ROLE_MODERADOR")
+                        // Apenas MODERADOR,ADMINISTRADOR pode gerenciar usuários
+                        .requestMatchers("/usuarios/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR")
 
                         // CONSULTOR só acessa GET (visualizar)
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/militares", "/militares/", "/dispensas/**").hasAnyAuthority(

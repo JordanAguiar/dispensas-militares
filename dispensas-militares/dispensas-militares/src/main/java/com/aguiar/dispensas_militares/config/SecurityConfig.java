@@ -30,6 +30,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
 
+                        .requestMatchers("/dashboard").hasAnyAuthority(
+                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO"
+                        )
                         // Apenas MODERADOR,ADMINISTRADOR pode gerenciar usuários
                         .requestMatchers("/usuarios/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR")
 

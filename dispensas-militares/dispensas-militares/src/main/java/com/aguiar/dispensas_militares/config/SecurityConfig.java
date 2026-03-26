@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomAuthenticationSuccessHandler successHandler;
     private final UsuarioDetailsService usuarioDetailsService;
 
     @Bean
@@ -28,29 +29,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/esqueci-senha", "/redefinir-senha", "/acesso-negado", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
-
-                        .requestMatchers("/dashboard").hasAnyAuthority(
-                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO"
-                        )
-                        // Apenas MODERADOR,ADMINISTRADOR pode gerenciar usuários
+                        .requestMatchers("/login", "/esqueci-senha", "/redefinir-senha", "/acesso-negado", "/2fa/**", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/dashboard").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO")
                         .requestMatchers("/usuarios/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR")
-
-                        // CONSULTOR só acessa GET (visualizar)
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/militares", "/militares/", "/dispensas/**").hasAnyAuthority(
-                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO"
-                        )
-
-                        // AFILHADO pode criar e alterar mas não deletar
-                        .requestMatchers("/militares/novo", "/militares/salvar", "/dispensas/salvar/**").hasAnyAuthority(
-                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_AFILHADO"
-                        )
-
-                        // Apenas MODERADOR e ADMINISTRADOR podem deletar
-                        .requestMatchers("/militares/deletar/**", "/dispensas/deletar/**").hasAnyAuthority(
-                                "ROLE_MODERADOR", "ROLE_ADMINISTRADOR"
-                        )
-
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/militares", "/militares/", "/dispensas/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_CONSULTOR", "ROLE_AFILHADO")
+                        .requestMatchers("/militares/novo", "/militares/salvar", "/dispensas/salvar/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR", "ROLE_AFILHADO")
+                        .requestMatchers("/militares/deletar/**", "/dispensas/deletar/**").hasAnyAuthority("ROLE_MODERADOR", "ROLE_ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
@@ -58,7 +42,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/militares", true)
+                        .successHandler(successHandler)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )

@@ -1,25 +1,60 @@
 package com.aguiar.dispensas_militares.service;
 
-import com.aguiar.dispensas_militares.service.EmailService;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import com.aguiar.dispensas_militares.model.Perfil;
 import com.aguiar.dispensas_militares.model.Usuario;
 import com.aguiar.dispensas_militares.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
-    private final EmailService emailService;
+
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final TotpService totpService;
 
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
+    }
+
+    public void salvar(Usuario usuario) {
+        // Verifica se já existe um MODERADOR cadastrado
+        if (usuario.getPerfil() == Perfil.MODERADOR) {
+            boolean jaExisteModerador = usuarioRepository.findAll()
+                    .stream()
+                    .anyMatch(u -> u.getPerfil() == Perfil.MODERADOR);
+
+            if (jaExisteModerador) {
+                throw new RuntimeException("Já existe um Moderador cadastrado no sistema!");
+            }
+        }
+
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuarioRepository.save(usuario);
+    }
+
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+    }
+
+    public void deletar(Long id, String usernameLogado) {
+        Usuario usuarioAlvo = buscarPorId(id);
+        Usuario usuarioLogado = usuarioRepository.findByUsername(usernameLogado)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if (usuarioLogado.getPerfil() == Perfil.ADMINISTRADOR
+                && usuarioAlvo.getPerfil() == Perfil.MODERADOR) {
+            throw new RuntimeException("Administrador não pode deletar um Moderador!");
+        }
+
+        usuarioRepository.deleteById(id);
     }
 
     public void solicitarRecuperacao(String email) {
@@ -48,27 +83,33 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public void salvar(Usuario usuario) {
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+    public String ativar2FA(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        String secret = totpService.gerarSecretKey();
+        usuario.setTotpSecret(secret);
+        usuarioRepository.save(usuario);
+
+        return totpService.gerarQRUrl(username, secret);
+    }
+
+    public void confirmar2FA(String username, int codigo) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if (!totpService.validarCodigo(usuario.getTotpSecret(), codigo)) {
+            throw new RuntimeException("Código inválido!");
+        }
+
+        usuario.setTotpAtivo(true);
         usuarioRepository.save(usuario);
     }
 
-    public Usuario buscarPorId(Long id) {
-        return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-    }
-
-    public void deletar(Long id, String usernameLogado) {
-        Usuario usuarioAlvo = buscarPorId(id);
-        Usuario usuarioLogado = usuarioRepository.findByUsername(usernameLogado)
+    public boolean validar2FA(String username, int codigo) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        // ADMINISTRADOR não pode deletar MODERADOR
-        if (usuarioLogado.getPerfil() == Perfil.ADMINISTRADOR
-                && usuarioAlvo.getPerfil() == Perfil.MODERADOR) {
-            throw new RuntimeException("Administrador não pode deletar um Moderador!");
-        }
-
-        usuarioRepository.deleteById(id);
+        return totpService.validarCodigo(usuario.getTotpSecret(), codigo);
     }
 }

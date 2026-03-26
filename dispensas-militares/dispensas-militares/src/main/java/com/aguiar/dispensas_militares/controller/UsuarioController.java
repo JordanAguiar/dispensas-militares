@@ -25,9 +25,17 @@ public class UsuarioController {
     }
 
     @PostMapping("/salvar")
-    public String salvar(@ModelAttribute Usuario usuario) {
-        usuarioService.salvar(usuario);
-        return "redirect:/usuarios";
+    public String salvar(@ModelAttribute Usuario usuario, Model model) {
+        try {
+            usuarioService.salvar(usuario);
+            return "redirect:/usuarios";
+        } catch (RuntimeException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("usuarios", usuarioService.listarTodos());
+            model.addAttribute("usuario", new Usuario());
+            model.addAttribute("perfis", Perfil.values());
+            return "usuarios/listar";
+        }
     }
 
     @GetMapping("/deletar/{id}")

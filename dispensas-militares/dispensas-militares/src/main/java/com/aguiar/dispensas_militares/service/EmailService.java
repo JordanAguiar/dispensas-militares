@@ -1,6 +1,7 @@
 package com.aguiar.dispensas_militares.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${app.url}")
+    private String appUrl;
+
     public void enviarEmailRecuperacao(String email, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
@@ -19,7 +23,7 @@ public class EmailService {
                 "Olá!\n\n" +
                         "Recebemos uma solicitação de recuperação de senha para sua conta no SISDIS.\n\n" +
                         "Clique no link abaixo para redefinir sua senha:\n\n" +
-                        "http://localhost:8080/redefinir-senha?token=" + token + "\n\n" +
+                        appUrl + "/redefinir-senha?token=" + token + "\n\n" +
                         "Este link expira em 30 minutos.\n\n" +
                         "Se você não solicitou a recuperação de senha, ignore este email.\n\n" +
                         "Marinha do Brasil - SISDIS"

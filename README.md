@@ -110,31 +110,23 @@ VALUES ('admin', '$2a$10$HASH_AQUI', 'MODERADOR', false, 'seu@email.com');
 ## 📸 Screenshots
 
 ### Tela de Login
-![Login](<img width="1915" height="908" alt="image" src="https://github.com/user-attachments/assets/7aabef82-cb9a-4476-a77e-6a763aba2dd3" />
-)
+<img width="1915" height="908" alt="image" src="https://github.com/user-attachments/assets/7aabef82-cb9a-4476-a77e-6a763aba2dd3" />
+
 
 ### 2FA
-![Dashboard](<img width="1915" height="905" alt="image" src="https://github.com/user-attachments/assets/4e1e8a8f-7d09-469f-bb20-a1309ddeb4f1" />
-
-)
+<img width="1915" height="905" alt="image" src="https://github.com/user-attachments/assets/4e1e8a8f-7d09-469f-bb20-a1309ddeb4f1" />
 
 ### Lista de Militares
-![Militares](<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/5be76a42-3f99-4342-a25a-7e4659f486d3" />
-)
+<img width="1917" height="907" alt="image" src="https://github.com/user-attachments/assets/5be76a42-3f99-4342-a25a-7e4659f486d3" />
 
 ### Dashboard
-![Dashboard](<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/7a872ae3-7cba-4938-814b-79184b3ceee3" />
-)
+<img width="1919" height="908" alt="image" src="https://github.com/user-attachments/assets/7a872ae3-7cba-4938-814b-79184b3ceee3" />
 
 ### Usuários
-![Dashboard](<img width="1918" height="904" alt="image" src="https://github.com/user-attachments/assets/6fb8df6b-47d9-4d3e-9766-cb8bc256dc82" />
-
-)
+<img width="1918" height="904" alt="image" src="https://github.com/user-attachments/assets/6fb8df6b-47d9-4d3e-9766-cb8bc256dc82" />
 
 ### Cadastro de Militar
-![Dashboard](<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/a8ba061d-7b6f-4a50-924d-4f0b223808fd" />
-
-)
+<img width="1919" height="909" alt="image" src="https://github.com/user-attachments/assets/a8ba061d-7b6f-4a50-924d-4f0b223808fd" />
 
 ---
 
